@@ -11,7 +11,8 @@ public enum CSC450ErrorCode {
 	UNKNOWN_ERROR(1, "Unknown CSC450Lib error"),
 
 	// 100-199 error codes for calculus-related exceptions
-	FUNCTION_NOT_DEFINED_AT_EVALUATION_POINT(100, "Function is not defined at evaluation point");
+	FUNCTION_NOT_DEFINED_AT_EVALUATION_POINT(100, "Function is not defined at evaluation point"),
+	ARRAY_LENGTH_DOES_NOT_EQUAL_FUNCTION_DIMENSION(110, "Array size does not equal function dimension");
 
 	// 200-299 error codes for linear algebra-related exceptions
 

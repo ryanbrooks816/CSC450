@@ -12,7 +12,7 @@ import csc450lib.calc.Function1D;
  * This is a modified version of the bllasitic function
  * 
  */
-public class Projectile {
+public class Projectile1D {
     private float x, y; // Current position
     private float Vx, Vy; // Current speed in x and y direction
     private float α; // Reflection coefficient
@@ -26,7 +26,7 @@ public class Projectile {
      * @param γ  Launch angle
      * @param α  Reflection coefficient
      */
-    public Projectile(float x0, float y0, float V, float γ, float α) {
+    public Projectile1D(float x0, float y0, float V, float γ, float α) {
         this.x = x0;
         this.y = y0;
         this.Vx = V * (float) Math.cos(γ);
