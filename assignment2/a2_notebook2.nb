@@ -1,0 +1,670 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     27410,        662]
+NotebookOptionsPosition[     24118,        599]
+NotebookOutlinePosition[     24523,        615]
+CellTagsIndexPosition[     24480,        612]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Assignment 2", "Title",
+ CellChangeTimes->{{3.9238653607524567`*^9, 
+  3.9238653625006065`*^9}},ExpressionUUID->"3039948e-ca43-0546-9fcb-\
+609ea672183c"],
+
+Cell[CellGroupData[{
+
+Cell["Bouncing Ball Application", "Chapter",
+ CellChangeTimes->{{3.91840134937904*^9, 
+  3.918401353742796*^9}},ExpressionUUID->"739afb96-a8f0-874e-bb89-\
+d3d874bf177f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"SetDirectory", "[", 
+  "\"\<C:\\\\Users\\\\brook\\\\Documents\\\\Workspaces\\\\CSC \
+450\\\\assignment2\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"FileNames", "[", "]"}]}], "Input",
+ CellChangeTimes->{{3.918420376928152*^9, 3.9184203771993084`*^9}, {
+  3.920485070799198*^9, 3.920485072416956*^9}, {3.9238653806715336`*^9, 
+  3.923865381637596*^9}},
+ CellLabel->"In[89]:=",ExpressionUUID->"5cccadb8-301e-884a-89ee-06a42e096214"],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\brook\\\\Documents\\\\Workspaces\\\\CSC \
+450\\\\assignment2\"\>"], "Output",
+ CellChangeTimes->{
+  3.918401374159239*^9, 3.918414773186231*^9, 3.9184149254089527`*^9, 
+   3.9184200367109833`*^9, 3.918420235593658*^9, {3.918420367175211*^9, 
+   3.918420378076309*^9}, 3.918420410807815*^9, 3.918430479673019*^9, 
+   3.920485074139808*^9, 3.923506332116598*^9, 3.923865383233509*^9},
+ CellLabel->"Out[89]=",ExpressionUUID->"95197251-d4e9-5648-9b73-74bb7d344b28"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"a2_notebook1.nb\"\>", ",", "\<\"a2_notebook2.nb\"\>", 
+   ",", "\<\"a2_output1.csv\"\>", ",", "\<\"a2_output2.csv\"\>", 
+   ",", "\<\"a2_output3.csv\"\>", ",", "\<\"a2_output4.csv\"\>", 
+   ",", "\<\"csc450\"\>", ",", "\<\"README.md\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.918401374159239*^9, 3.918414773186231*^9, 3.9184149254089527`*^9, 
+   3.9184200367109833`*^9, 3.918420235593658*^9, {3.918420367175211*^9, 
+   3.918420378076309*^9}, 3.918420410807815*^9, 3.918430479673019*^9, 
+   3.920485074139808*^9, 3.923506332116598*^9, 3.92386538324*^9},
+ CellLabel->"Out[90]=",ExpressionUUID->"17cbb3a3-79f7-f54b-bf27-c38bb7f02637"]
+}, Open  ]],
+
+Cell["\<\
+Note: There should be animations running below given the imported CSV files. \
+If not, the location of the files may need to be updated.\
+\>", "NaturalLanguageInput",
+ CellChangeTimes->{{3.923865602619383*^9, 
+  3.9238656638483543`*^9}},ExpressionUUID->"25debfc4-8bf6-e54b-8af2-\
+695ecb2d383c"],
+
+Cell["\<\
+Establish a function to display an animated plot of a ball\[CloseCurlyQuote]s \
+trajectory along a surface. Takes a function to represent the ground and a \
+filename to get the data points from.
+It then determines the min and max X and Y values to establish the plot \
+range, plots the axis, and then plots the ground functions.
+
+The second function does the same thing as the first except its plot range is \
+automatically interpreted. I had better results sometimes creating my own \
+plot range as the animation tries to adjust its frame as the object moves, \
+and it makes it hard to see what\[CloseCurlyQuote]s going on.\
+\>", "Text",
+ CellChangeTimes->{{3.918419295265239*^9, 3.918419388697841*^9}, {
+  3.918420579470501*^9, 
+  3.918420655242302*^9}},ExpressionUUID->"b51542c5-34d3-7148-9f23-\
+26960e8b51ec"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"animateData", "[", 
+    RowBox[{"f_", ",", "filename_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"data", "=", 
+        RowBox[{"Import", "[", 
+         RowBox[{"filename", ",", "\"\<CSV\>\""}], "]"}]}], ",", "minX", ",", 
+       "maxX", ",", "minY", ",", "maxY"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"minX", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"data", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"maxX", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"data", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"minY", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"data", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "2"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"maxY", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"data", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "2"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Animate", "[", 
+       RowBox[{
+        RowBox[{"Show", "[", 
+         RowBox[{
+          RowBox[{"Graphics", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+              RowBox[{"Point", "[", 
+               RowBox[{"data", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], ",", 
+              RowBox[{"Line", "[", 
+               RowBox[{"data", "[", 
+                RowBox[{"[", 
+                 RowBox[{"1", ";;", "i"}], "]"}], "]"}], "]"}]}], "}"}], ",", 
+            RowBox[{"PlotRange", "->", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"minX", ",", "maxX"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"minY", ",", "maxY"}], "}"}]}], "}"}]}], ",", 
+            RowBox[{"Axes", "->", "True"}]}], "]"}], ",", 
+          RowBox[{"Plot", "[", 
+           RowBox[{
+            RowBox[{"f", "[", "x", "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"x", ",", "minX", ",", "maxX"}], "}"}]}], "]"}]}], "]"}],
+         ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "data", "]"}], ",", "1"}], "}"}]}], 
+       "]"}]}]}], "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"animateDataAutoRange", "[", 
+   RowBox[{"f_", ",", "filename_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"data", "=", 
+      RowBox[{"Import", "[", 
+       RowBox[{"filename", ",", "\"\<CSV\>\""}], "]"}]}], "}"}], ",", 
+    RowBox[{"Animate", "[", 
+     RowBox[{
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"Graphics", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+            RowBox[{"Point", "[", 
+             RowBox[{"data", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"Line", "[", 
+             RowBox[{"data", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ";;", "i"}], "]"}], "]"}], "]"}]}], "}"}], ",", 
+          RowBox[{"Axes", "->", "True"}]}], "]"}], ",", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"f", "[", "x", "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", 
+            RowBox[{"Min", "[", 
+             RowBox[{"data", "[", 
+              RowBox[{"[", 
+               RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}], ",", 
+            RowBox[{"Max", "[", 
+             RowBox[{"data", "[", 
+              RowBox[{"[", 
+               RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], "}"}]}], 
+         "]"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "data", "]"}], ",", "1"}], "}"}]}], "]"}]}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.918418146621908*^9, 3.918418154226541*^9}, {
+  3.918418928363218*^9, 3.9184189288774166`*^9}, {3.918420550976538*^9, 
+  3.918420551342595*^9}},
+ CellLabel->"In[91]:=",ExpressionUUID->"75894932-8d22-434a-bcfa-0b12e49f203c"],
+
+Cell[CellGroupData[{
+
+Cell["#1 A simple exercise from Section 7 of the assignment", "Subsection",
+ CellChangeTimes->{{3.918419394789192*^9, 
+  3.918419429520256*^9}},ExpressionUUID->"638596f9-94bb-ac43-b6f9-\
+49f9f4a74f1c"],
+
+Cell["\<\
+The ground is y = 0.
+For performance reasons, my delta t is 0.01 to determine data points. A more \
+precise number would create of course more data points, resulting in a \
+smoother animation, but it became troublesome to run multiple animations in \
+Mathematica.\
+\>", "Text",
+ CellChangeTimes->{{3.9184194329700184`*^9, 3.9184194375637274`*^9}, {
+  3.9184197182844296`*^9, 3.9184198235620365`*^9}, {3.923865445668312*^9, 
+  3.923865448499264*^9}},ExpressionUUID->"21b62858-ed23-af45-8b19-\
+90e62a676bc7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"animateData", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"0", "*", "#"}], "&"}], ",", "\"\<a2_output1.csv\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.918418947744335*^9, 3.918418986869877*^9}, {
+  3.918419440049261*^9, 3.918419442267948*^9}, {3.923506304983095*^9, 
+  3.923506307101183*^9}},
+ CellLabel->"In[93]:=",ExpressionUUID->"88c4f028-b15e-2f47-aa78-a2596f5aa8dd"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`i$$ = 5022, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`i$$], 1, 20004, 1, ControlType -> Animator}}, 
+    Typeset`size$$ = {360., {36., 40.454440585279514`}}, Typeset`update$$ = 0,
+     Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`i$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        Graphics[{
+          PointSize[Large], 
+          Point[
+           Part[$CellContext`data$58279, $CellContext`i$$]], 
+          Line[
+           Part[$CellContext`data$58279, 
+            Span[1, $CellContext`i$$]]]}, 
+         PlotRange -> {{$CellContext`minX$58304, $CellContext`maxX$58304}, \
+{$CellContext`minY$58304, $CellContext`maxY$58304}}, Axes -> True], 
+        Plot[
+         (
+         0 #& )[$CellContext`x], {$CellContext`x, $CellContext`minX$58304, \
+$CellContext`maxX$58304}]], 
+      "Specifications" :> {{$CellContext`i$$, 1, 20004, 1, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{408., {71.13403309800196, 76.86596690199804}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.918419641954481*^9, 3.9184199212309303`*^9, 3.918419966386305*^9, 
+   3.918420037483007*^9, 3.918420244240814*^9, {3.918420387223522*^9, 
+   3.9184204159662533`*^9}, 3.918430484801685*^9, 3.92048508412344*^9, {
+   3.923506324189932*^9, 3.923506335615313*^9}, 3.923865389356365*^9},
+ CellLabel->"Out[93]=",ExpressionUUID->"e5b08109-e65b-354a-8093-41457797ff49"]
+}, Open  ]],
+
+Cell["\<\
+As we can see, launched from an angle of PI/4 and with a reflection factor of \
+0.85, the ball bounces reputedly until it reaches a certain tolerance within \
+0 and is no longer moving. \
+\>", "Text",
+ CellChangeTimes->{{3.9184296521236057`*^9, 
+  3.918429716857563*^9}},ExpressionUUID->"059940f5-acb7-f640-9c62-\
+079de948fd5d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["#2 A slightly more complex ground function", "Subsection",
+ CellChangeTimes->{{3.9184194525846176`*^9, 3.918419464215143*^9}, {
+  3.9184195783033447`*^9, 
+  3.918419581851591*^9}},ExpressionUUID->"c5937d09-1254-4045-b641-\
+8c0718a8058a"],
+
+Cell["y = 1/4x", "Text",
+ CellChangeTimes->{{3.9184195924849205`*^9, 
+  3.918419594854046*^9}},ExpressionUUID->"782264b3-8def-0b4e-8cb7-\
+0ed526eec696"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"animateDataAutoRange", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"0.25", "*", "#"}], "&"}], ",", "\"\<a2_output2.csv\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.918419598856903*^9, 3.9184196028345394`*^9}, {
+  3.918420558071535*^9, 3.918420560747116*^9}, {3.9235063103272266`*^9, 
+  3.9235063108808136`*^9}},
+ CellLabel->"In[94]:=",ExpressionUUID->"05519c3c-7048-974e-b001-923286212d9b"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`i$$ = 3219, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`i$$], 1, 20004, 1, ControlType -> Animator}}, 
+    Typeset`size$$ = {360., {67., 70.80357958681742}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`i$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        Graphics[{
+          PointSize[Large], 
+          Point[
+           Part[$CellContext`data$60313, $CellContext`i$$]], 
+          Line[
+           Part[$CellContext`data$60313, 
+            Span[1, $CellContext`i$$]]]}, Axes -> True], 
+        Plot[
+         (0.25 #& )[$CellContext`x], {$CellContext`x, 
+          Min[
+           Part[$CellContext`data$60313, All, 1]], 
+          Max[
+           Part[$CellContext`data$60313, All, 1]]}]], 
+      "Specifications" :> {{$CellContext`i$$, 1, 20004, 1, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{408., {101.63403309800196`, 107.36596690199804`}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.918420432355377*^9, 3.918420441865492*^9}, 
+   3.918420562697745*^9, 3.918430488867338*^9, 3.920485094143364*^9, {
+   3.923506328133009*^9, 3.9235063404082355`*^9}, 3.9238653927241592`*^9},
+ CellLabel->"Out[94]=",ExpressionUUID->"28b2d2ae-501a-af4d-aec8-4071786d7dc3"]
+}, Open  ]],
+
+Cell["\<\
+When bouncing uphill, it results in fewer bounces. Still with the same \
+starting position, launch angle, and reflection factor as the previous \
+example.\
+\>", "Text",
+ CellChangeTimes->{{3.9184299883335533`*^9, 3.918430024253977*^9}, 
+   3.923865402751177*^9},ExpressionUUID->"7c03336a-c381-934d-8091-\
+ad9bf84596bf"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["#3 And a more complex example", "Subsection",
+ CellChangeTimes->{{3.9184206709789143`*^9, 
+  3.918420682999592*^9}},ExpressionUUID->"ce47c9e0-2125-9546-8337-\
+556c61144a36"],
+
+Cell["y = sin(2*x^(1/2))", "Text",
+ CellChangeTimes->{{3.918424463996807*^9, 
+  3.9184244739452267`*^9}},ExpressionUUID->"f76c04ce-a05c-ad4b-824e-\
+c1cc98a5d20e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"animateDataAutoRange", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Sin", "[", 
+     RowBox[{"2", "*", 
+      RowBox[{"#", "^", 
+       RowBox[{"(", 
+        RowBox[{"1", "/", "2"}], ")"}]}]}], "]"}], "&"}], ",", 
+   "\"\<a2_output3.csv\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.918424482151169*^9, 3.918424484559122*^9}, 
+   3.918424518556248*^9, {3.918424562449684*^9, 3.918424567062626*^9}, {
+   3.923506314892555*^9, 3.923506315523155*^9}},
+ CellLabel->"In[95]:=",ExpressionUUID->"6c050d5f-9f8f-cd4d-b5ae-bf62ee81058d"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`i$$ = 6119, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`i$$], 1, 20004, 1, ControlType -> Animator}}, 
+    Typeset`size$$ = {360., {36., 39.75928637801127}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`i$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        Graphics[{
+          PointSize[Large], 
+          Point[
+           Part[$CellContext`data$64216, $CellContext`i$$]], 
+          Line[
+           Part[$CellContext`data$64216, 
+            Span[1, $CellContext`i$$]]]}, Axes -> True], 
+        Plot[
+         (Sin[2 #^(1/2)]& )[$CellContext`x], {$CellContext`x, 
+          Min[
+           Part[$CellContext`data$64216, All, 1]], 
+          Max[
+           Part[$CellContext`data$64216, All, 1]]}]], 
+      "Specifications" :> {{$CellContext`i$$, 1, 20004, 1, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{408., {70.63403309800196, 76.36596690199804}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.918424570109331*^9, 3.918428526482897*^9, 
+  3.918430492643091*^9, 3.920485121826042*^9, 3.923506343717757*^9, 
+  3.9238654050711517`*^9},
+ CellLabel->"Out[95]=",ExpressionUUID->"c877ae5c-70f5-4c46-828d-40266386c7d4"]
+}, Open  ]],
+
+Cell["\<\
+Even with an example with an uneven surface, the bounces slightly change.\
+\>", "Text",
+ CellChangeTimes->{{3.918430029863022*^9, 
+  3.918430039615246*^9}},ExpressionUUID->"dde8fda7-e14a-8c42-8c4d-\
+3408865f5c7b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["#4 Simulating many bounces", "Subsection",
+ CellChangeTimes->{{3.9184284421615257`*^9, 
+  3.9184284483736*^9}},ExpressionUUID->"666ee00e-161a-a243-9e81-3517e3391091"],
+
+Cell["y = 0.16x^2", "Text",
+ CellChangeTimes->{{3.9184284708510704`*^9, 
+  3.918428475977827*^9}},ExpressionUUID->"d839d0ce-e305-0c46-b7bc-\
+fe42bfd9c5a4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"animateDataAutoRange", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"0.16", 
+     RowBox[{"#", "^", "2"}]}], "&"}], ",", "\"\<a2_output4.csv\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.918428485212801*^9, 3.918428496904028*^9}, {
+  3.923506319227461*^9, 3.92350631990761*^9}},
+ CellLabel->"In[96]:=",ExpressionUUID->"3f2c67a0-06ab-e544-8379-af40dc74e04a"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`i$$ = 4851, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`i$$], 1, 5311, 1, ControlType -> Animator}}, 
+    Typeset`size$$ = {360., {173., 177.4619182912578}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`i$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Show[
+        Graphics[{
+          PointSize[Large], 
+          Point[
+           Part[$CellContext`data$68013, $CellContext`i$$]], 
+          Line[
+           Part[$CellContext`data$68013, 
+            Span[1, $CellContext`i$$]]]}, Axes -> True], 
+        Plot[
+         (0.16 #^2& )[$CellContext`x], {$CellContext`x, 
+          Min[
+           Part[$CellContext`data$68013, All, 1]], 
+          Max[
+           Part[$CellContext`data$68013, All, 1]]}]], 
+      "Specifications" :> {{$CellContext`i$$, 1, 5311, 1, 
+         AppearanceElements -> {
+          "ProgressSlider", "PlayPauseButton", "FasterSlowerButtons", 
+           "DirectionButton"}}}, 
+      "Options" :> {
+       ControlType -> Animator, AppearanceElements -> None, DefaultBaseStyle -> 
+        "Animate", DefaultLabelStyle -> "AnimateLabel", SynchronousUpdating -> 
+        True, ShrinkingDelay -> 10.}, "DefaultOptions" :> {}],
+     ImageSizeCache->{408., {208.13403309800196`, 213.86596690199804`}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Animate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.918428497803819*^9, 3.9184286478110313`*^9, 
+  3.918428820054355*^9, 3.91842896370623*^9, 3.918430498012944*^9, 
+  3.9204851347360077`*^9, 3.923506351946497*^9, 3.9238654650307236`*^9},
+ CellLabel->"Out[96]=",ExpressionUUID->"0f50c342-2604-eb4e-be3e-a1315878200e"]
+}, Open  ]],
+
+Cell["\<\
+Now this is a fun example. Since in this example the ball bounces backward \
+because of the absolute value of the incidence angle from the path of the \
+ball\[CloseCurlyQuote]s motion and the normal vector to the ground. 
+We can see the ball move back and forth as its velocity changes. This example \
+also showcases the main idea behind continually calculating the incoming \
+projectile\[CloseCurlyQuote]s position and speed to determine its
+next bounce direction as an additional part of the Projectile1D class.\
+\>", "Text",
+ CellChangeTimes->{{3.9184290763756638`*^9, 3.918429099943018*^9}, {
+  3.918429180288839*^9, 3.918429191068886*^9}, {3.918429274999645*^9, 
+  3.918429284890217*^9}, {3.9184300536547737`*^9, 3.9184300633154488`*^9}, {
+  3.918430511775076*^9, 3.918430541847283*^9}, {3.923865515021225*^9, 
+  3.9238655472117634`*^9}},ExpressionUUID->"105a560a-ddb3-4c40-ad35-\
+f274f0f64d5f"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1908, 1005.75},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"14.0 for Microsoft Windows (64-bit) (December 12, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"252fd101-0045-654b-ab75-218f091188af"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 159, 3, 98, "Title",ExpressionUUID->"3039948e-ca43-0546-9fcb-609ea672183c"],
+Cell[CellGroupData[{
+Cell[764, 29, 169, 3, 69, "Chapter",ExpressionUUID->"739afb96-a8f0-874e-bb89-d3d874bf177f"],
+Cell[CellGroupData[{
+Cell[958, 36, 457, 8, 48, "Input",ExpressionUUID->"5cccadb8-301e-884a-89ee-06a42e096214"],
+Cell[1418, 46, 494, 7, 32, "Output",ExpressionUUID->"95197251-d4e9-5648-9b73-74bb7d344b28"],
+Cell[1915, 55, 682, 11, 32, "Output",ExpressionUUID->"17cbb3a3-79f7-f54b-bf27-c38bb7f02637"]
+}, Open  ]],
+Cell[2612, 69, 304, 6, 47, "NaturalLanguageInput",ExpressionUUID->"25debfc4-8bf6-e54b-8af2-695ecb2d383c"],
+Cell[2919, 77, 823, 15, 104, "Text",ExpressionUUID->"b51542c5-34d3-7148-9f23-26960e8b51ec"],
+Cell[3745, 94, 4369, 119, 143, "Input",ExpressionUUID->"75894932-8d22-434a-bcfa-0b12e49f203c"],
+Cell[CellGroupData[{
+Cell[8139, 217, 201, 3, 54, "Subsection",ExpressionUUID->"638596f9-94bb-ac43-b6f9-49f9f4a74f1c"],
+Cell[8343, 222, 516, 10, 58, "Text",ExpressionUUID->"21b62858-ed23-af45-8b19-90e62a676bc7"],
+Cell[CellGroupData[{
+Cell[8884, 236, 398, 9, 28, "Input",ExpressionUUID->"88c4f028-b15e-2f47-aa78-a2596f5aa8dd"],
+Cell[9285, 247, 2704, 55, 167, "Output",ExpressionUUID->"e5b08109-e65b-354a-8093-41457797ff49"]
+}, Open  ]],
+Cell[12004, 305, 338, 7, 35, "Text",ExpressionUUID->"059940f5-acb7-f640-9c62-079de948fd5d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12379, 317, 243, 4, 54, "Subsection",ExpressionUUID->"c5937d09-1254-4045-b641-8c0718a8058a"],
+Cell[12625, 323, 152, 3, 35, "Text",ExpressionUUID->"782264b3-8def-0b4e-8cb7-0ed526eec696"],
+Cell[CellGroupData[{
+Cell[12802, 330, 416, 9, 28, "Input",ExpressionUUID->"05519c3c-7048-974e-b001-923286212d9b"],
+Cell[13221, 341, 2556, 53, 228, "Output",ExpressionUUID->"28b2d2ae-501a-af4d-aec8-4071786d7dc3"]
+}, Open  ]],
+Cell[15792, 397, 329, 7, 35, "Text",ExpressionUUID->"7c03336a-c381-934d-8091-ad9bf84596bf"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16158, 409, 179, 3, 54, "Subsection",ExpressionUUID->"ce47c9e0-2125-9546-8337-556c61144a36"],
+Cell[16340, 414, 162, 3, 35, "Text",ExpressionUUID->"f76c04ce-a05c-ad4b-824e-c1cc98a5d20e"],
+Cell[CellGroupData[{
+Cell[16527, 421, 549, 13, 28, "Input",ExpressionUUID->"6c050d5f-9f8f-cd4d-b5ae-bf62ee81058d"],
+Cell[17079, 436, 2508, 53, 166, "Output",ExpressionUUID->"c877ae5c-70f5-4c46-828d-40266386c7d4"]
+}, Open  ]],
+Cell[19602, 492, 223, 5, 35, "Text",ExpressionUUID->"dde8fda7-e14a-8c42-8c4d-3408865f5c7b"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19862, 502, 172, 2, 54, "Subsection",ExpressionUUID->"666ee00e-161a-a243-9e81-3517e3391091"],
+Cell[20037, 506, 155, 3, 35, "Text",ExpressionUUID->"d839d0ce-e305-0c46-b7bc-fe42bfd9c5a4"],
+Cell[CellGroupData[{
+Cell[20217, 513, 381, 9, 28, "Input",ExpressionUUID->"3f2c67a0-06ab-e544-8379-af40dc74e04a"],
+Cell[20601, 524, 2552, 53, 441, "Output",ExpressionUUID->"0f50c342-2604-eb4e-be3e-a1315878200e"]
+}, Open  ]],
+Cell[23168, 580, 910, 14, 81, "Text",ExpressionUUID->"105a560a-ddb3-4c40-ad35-f274f0f64d5f"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
